@@ -43,6 +43,8 @@ The following sections are necessary for SPI:
 ## Particularities
 We will be using SPI1 here, which is clocked on APB2. From the ClockDriver project, we know that APB2 – the bus, not the connected timer – clocks at 16 MHz, so pre-scaling this value by 2 will lead us to a clocking speed of 8 MHz. This is an ideal timing for the SPI.
 
+We are using the ClockDriver as clocking - not HAL - because we can have smaller delays than what HAL allows.
+
 Be aware that CS/SS has an internal and an external element to it. The external element is what we discussed above, but the SPI driver itself will also have to have its own CS/SS driven in master mode so as to indicate that we activate the SPI bus. Luckily, we can connect the internal and the external CS/SS pins together, so whenever we enable the SPI, we will have both elements properly activated. Why I am not doing it here though is that this limits the CS/SS pin to PA4 or PA15 on the L0x3, which wasn’t convenient. As such, we will drive the external CS/SS as a simple GPIO output, and the internal CS/SS by interacting with the appropriate register bits (SSI in the CR1 register). 
 
 Mind, the combination of where is the data sent (rising edge or falling edge) will be a quality of the bus and thus must be set the same way on both the master and the slave. Here we choose SPIMODE0 as the bus type, where both the clock phase and the polarity remains standard (we will send data on the falling edge and capture it on the rising one). The SPI mode demanded by a device is usually indicated within its datasheet.
