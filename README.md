@@ -52,9 +52,13 @@ Same can be said about the frame sizes. 8-bit frames is the standard value, so w
 Since SPI is duplex, Rx and Tx will happen at the same time. This has the benefit that Rx and Tx will have a different buffer for their own data, plus different control flags (but also will demand two DMA channels to run, see below).
 
 ### DMA
-DMA is particularly useful to manage SPI since the solves the duplex timing issue for us. To reiterate, the peripheral will always send a request to the DMA whenever it is necessary for it to have something in the Tx buffer or having something removed from the Rx buffer, ensuring that the communication remains fluent. As such, we do need two DMA channels just to properly run one peripheral, which is not so ideal… Without DMA though, a circular SPI communication would be difficult to implement, not to mention, it would likely be very sensitive timing deviation. At any rate, for shorter message transitions (no data dumps), DMA is completely unnecessary.
+DMA is particularly useful to manage SPI since the solves the duplex timing issue for us. To reiterate, the peripheral will always send a request to the DMA whenever it is necessary for it to have something in the Tx buffer or having something removed from the Rx buffer, ensuring that the communication remains fluent. As such, we do need two DMA channels just to properly run one peripheral, which is not so ideal… Without DMA though, a circular SPI communication would be difficult to implement, not to mention, it would likely be very sensitive timing deviation.
+
+At any rate, for shorter message transitions (no data dumps), DMA is completely unnecessary.
 
 ## User guide
 We should be aware that the guide above only describes, how to set up the hardware to behave as an SPI master. Afterwards though, we still would need to be control this hardware in a way that SPI-compliant messages will be formed.
 
-We will use our mcu to communicate with a BMP280 temperature sensor using SPI. I am not going to explain the messaging and what needs to be written to the BMP280 since that is not the aim of this guide. Thus, it is highly recommended to read the BMP280 datasheet provided, for instance, here: BMA150 data sheet Rev. 1.4 (adafruit.com)
+We will use our mcu to communicate with a BMP280 temperature sensor using SPI. I am not going to explain the messaging and what needs to be written to the BMP280 since that is not the aim of this guide. Thus, it is highly recommended to read the BMP280 datasheet provided, for instance, here:
+
+https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/downloads
