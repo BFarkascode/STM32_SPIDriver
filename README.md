@@ -59,8 +59,10 @@ DMA is particularly useful to manage SPI since the solves the duplex timing issu
 At any rate, for shorter message transitions (no data dumps), DMA is completely unnecessary.
 
 ## User guide
-We should be aware that the guide above only describes, how to set up the hardware to behave as an SPI master. Afterwards though, we still would need to be control this hardware in a way that SPI-compliant messages will be formed.
+We should be aware that the guide above only describes, how to set up the hardware to behave as an SPI master. Afterwards though, we still would need to control this hardware in a way that SPI-compliant messages will be formed. The datasheet of the sensors usually detail, how SPI messages are constructred so I won't detail it here. The only thing to be aware of is that our peripheral handles the start and the stop parts, we merely need to control the external part of the CS/SS and manage to information that is being sent over/received from the bus.
 
-We will use our mcu to communicate with a BMP280 temperature sensor using SPI. I am not going to explain the messaging and what needs to be written to the BMP280 since that is not the aim of this guide. Thus, it is highly recommended to read the BMP280 datasheet provided, for instance, here:
+We will use our mcu to communicate with a BMP280 temperature sensor using SPI. This sensor is cheap and very common in electronics design due to its relatively high sensitivity and robustness.
+
+I am not going to explain the messaging and what needs to be written to the BMP280 since that is not the aim of this guide. Thus, it is highly recommended to read the BMP280 datasheet provided, for instance, here:
 
 https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/downloads
