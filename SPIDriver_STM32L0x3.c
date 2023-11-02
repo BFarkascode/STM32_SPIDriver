@@ -10,30 +10,16 @@
  * No external triggers, no DMA, no interrupts.
  * The driver currently generates only the master side of the driver.
  *
- *
  * SPI commands should be constructed as an array with the command (W/R) and the register to manipulate placed on [0] and the rest as the data to be written for W and 0x0 for R.
  * This "command" array can be used as the buffer for the command and the reply at the same time.
  *
  * Example:
- *    SPI1MasterInit_Custom();
- *    uint8_t reset_sensor[2] = {0x60, 0xB6};
- *    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET);
- *    HAL_Delay(1);															//necessary delay for the slave to react to the CS pin
- *    SPI1MasterWriteReg_Custom(reset_sensor[0], &reset_sensor[1], 1);
- *    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
- *
- *
- *  v.1.1.
- *  Added CS control for the slave driver - choose port and pin.
- *  Rearranged turn off sequence to disable slave before disabling master.
- *  The rearranged turn off sequence also deals with 50 ns SDO output disable time.
- *  Added redefinition of "MODER" to avoid any issues with reset value on CS pin.
- *  Added DMA callback for SPI.
- *
- * Example:
  *    SPI1MasterInit_Custom(GPIOA, 4);										//sets PA4 as the CS pin
+ *    uint8_t reset_sensor[2] = {0x60, 0xB6};
+ *    SPI1MasterWriteReg_Custom(reset_sensor[0], &reset_sensor[1], 1, GPIOA, 4);
+ *    Delay_us(100);														//delay to help with the timing
  *
- *  The code above will initialize the SPI1 and thenwrite the reset_sensor array to the slave with [0] as address and [1] as the data.
+ *  The code above will initialize the SPI1 and then write the reset_sensor array to the slave with [0] as address and [1] as the data.
  *  Here, the slave device is a BMP280 which has [7] as the W/R bit and [6:0] as the 7-bit register address. This is not the same when BMP280 is run using I2C, registers will be different!
  *
  *
@@ -75,23 +61,26 @@ void SPI1MasterInit (GPIO_TypeDef* gpio_port_SPI, uint8_t gpio_pin_number_SPI) {
 	//2) Assign SPI-specific pins
 	RCC->IOPENR |= (1<<0);													//PORTA clocking allowed
 	RCC->IOPENR |= (1<<1);													//PORTB clocking allowed
+	RCC->IOPENR |= (1<<2);													//PORTC clocking allowed
+																			//Note: we allow all ports, just in case
 	GPIOA->MODER &= ~(1<<10);												//PA5 alternate - SPI1 SCK
 	GPIOA->MODER &= ~(1<<14);												//PA7 alternate - SPI1 MOSI
-	GPIOB->MODER &= ~(1<<8);												//PB4 alternate - SPI1 MISO
+	GPIOA->MODER &= ~(1<<12);												//PA6 alternate - SPI1 MISO
 																			//we use push-pull
 	GPIOA->OSPEEDR |= (3<<10);												//PA5 very high speed
 	GPIOA->OSPEEDR |= (3<<14);												//PA7 very high speed
-	GPIOB->OSPEEDR |= (3<<8);												//PB4 very high speed
+	GPIOA->OSPEEDR |= (3<<12);												//PA6 very high speed
 																			//no pull resistors
 	//we leave the AF at reset state
 																			//PA5 AF0
 																			//PA7 AF0
-																			//PB4 AF0
+																			//PA6 AF0
 
 	gpio_port_SPI->OSPEEDR |= (3<<(gpio_pin_number_SPI * 2));				//CS pin is very high speed (likely not necessary)
 																			//Note: the slave CS can be whichever pin we wish
 	gpio_port_SPI->MODER |= (1<<(gpio_pin_number_SPI * 2));					//CS pin is general output - SPI1 CS
 	gpio_port_SPI->MODER &= ~(1<<((gpio_pin_number_SPI * 2) + 1));			//CS pin is general output - SPI1 CS
+	gpio_port_SPI->PUPDR |= (1<<(gpio_pin_number_SPI * 2));					//we need a pull-up on the pin since CS is active LOW
 
 
 	//3)Setup
@@ -171,7 +160,7 @@ void SPI1MasterRead (uint8_t reg_addr_to_read_from, uint8_t *bytes_received, uin
 
 	gpio_port_SPI->BRR |= (1<<gpio_pin_number_SPI);							//we enable the slave before we send the clock. CS setup time is minimum 5 ns, so no need for delay afterwards when using 32 MHz main clock (clock period is 31 ns)
 	SPI1->CR1 |= (1<<6);													//SPI enabled
-	SPI1->DR = reg_addr_to_read_from;												//we write the address of the register we wish to read from
+	SPI1->DR = reg_addr_to_read_from;										//we write the address of the register we wish to read from
 	while(!((SPI1->SR & (1<<1)) == (1<<1)));								//wait for the TXE flag to go HIGH and indicate that the TX buffer has been transferred to the shift register completely
 	while(!((SPI1->SR & (1<<0)) == (1<<0)));								//we wait for the RXNE flag to go HIGH, indicating that the command has been transferred successfully
 	uint32_t buf_junk = SPI1->DR;											//we reset the RX flag
@@ -184,6 +173,7 @@ void SPI1MasterRead (uint8_t reg_addr_to_read_from, uint8_t *bytes_received, uin
 																			//we extract the received value and by proxy reset the RX flag
 		bytes_received++;													//we step our pointer within the receiving end
 		number_of_bytes--;
+
 	}
 
 	while(((SPI1->SR & (1<<0)) == (1<<0)));									//we check that the Rx buffer is indeed empty
