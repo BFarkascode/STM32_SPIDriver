@@ -59,10 +59,20 @@ DMA is particularly useful to manage SPI since the solves the duplex timing issu
 At any rate, for shorter message transitions (no data dumps), DMA is completely unnecessary.
 
 ## User guide
-We should be aware that the guide above only describes, how to set up the hardware to behave as an SPI master. Afterwards though, we still would need to control this hardware in a way that SPI-compliant messages will be formed. The datasheet of the sensors usually detail, how SPI messages are constructred so I won't detail it here. The only thing to be aware of is that our peripheral handles the start and the stop parts, we merely need to control the external part of the CS/SS and manage to information that is being sent over/received from the bus.
+We should be aware that the guide above only describes, how to set up the hardware to behave as an SPI master. Afterwards though, we still would need to control this hardware in a way that SPI-compliant messages will be formed. The datasheet of the sensors usually detail, how SPI messages are constructed so I won't detail it here. The only thing to be aware of is that our peripheral handles the start and the stop parts, we merely need to control the external part of the CS/SS and manage to information that is being sent over/received from the bus.
+
+Both the writing and reading side of the ths SPI takes arrays as input. On the write side, the first element of the row in the array (0th to be corrected) will be address of the register we want to write to, the rest will be the data we want to write to the register with each column holding one byte to write (thus the "number_of_bytes" input will be the number of columns in the array, minus 1). The write array will not be modified by the SPI write function and can be reused. On the read side, things are a bit different since we need to first write to the device (send over the read command and the register we wish to read from) followed by some dummy bytes that allows the reception of the readout. In how the main function works here, we send over the read command and the register we wish to read from, then use the same byte as the dummy, effectively replacing it with the readout value. This works since we have one readout value only. Mind, this approach means that the readout message array is being overwritten during the readout procedure (that's why I defined it within the while loop instead of the setup part, like for the reset and the standard function definition).
 
 We will use our mcu to communicate with a BMP280 temperature sensor using SPI. This sensor is cheap and very common in electronics design due to its relatively high sensitivity and robustness.
 
-I am not going to explain the messaging and what needs to be written to the BMP280 since that is not the aim of this guide. Thus, it is highly recommended to read the BMP280 datasheet provided, for instance, here:
+I am not going to explain the messaging and what needs to be written to the BMP280 since that is not the aim of this guide. Just to give some guidelines:
+- reading out is register address with MSB being 1
+- writing to is register address with MSB being 0
+- the F4 register is the control register, writing 0x27 will allow a standard sensor function
+- the measured raw values are stored in registers Fa, Fb and FC
+- raw values are ADC values that need to be reconstructed and managed to turn them into temperature values
+- necessary constants to calculate the temperature are stored in registers from 0x88 to 0x8D
+
+Thus, it is highly recommended to read the BMP280 datasheet provided, for instance, here:
 
 https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/downloads
