@@ -1,7 +1,7 @@
 # STM32_SPIDriver
 
 ## General description
-SPI – alongside UART and I2C – is one of the prime communication protocols one uses in mcu system. It can be scaled to rather high speed – at maximum, half the speed of the mcu’s internal clock – albeit it rarely is used faster than 10 MHz. (This is a purely practical reason since past 10 MHz, conventional jumper cables start to become inadequate to transfer the SPI data, for more information check “cables”.) Thus, it is hands down the fastest solution amongst the other aforementioned com protocols. It is also very easy to scale up to have multiple devices, thanks to the designated chip select/slave select pin.
+SPI – alongside UART and I2C – is one of the prime communication protocols one uses in mcu system. It can be scaled to rather high speed – at maximum, half the speed of the mcu’s internal clock – albeit it rarely is used faster than 10 MHz. (This is a purely practical reason since past 10 MHz, conventional jumper cables start to become inadequate to transfer the SPI data, for more information search “transmission lines theory”.) Thus, it is hands down the fastest solution amongst the other aforementioned com protocols. It is also very easy to scale up to have multiple devices, thanks to the designated chip select/slave select pin.
 
 Yet, it has its flaws, mostly in the form of control. Implementing – and managing – SPI in its standard form is usually rather complex.
 
