@@ -77,6 +77,8 @@ I am not going to explain the messaging and what needs to be written to the BMP2
 - raw values are ADC values that need to be reconstructed and managed to turn them into temperature values
 - necessary constants to calculate the temperature are stored in registers from 0x88 to 0x8D
 
-Thus, it is highly recommended to read the BMP280 datasheet provided, for instance, here:
+Of note, once you have set the sensor, it won't be reset unless you tell it to or de-power it. You may find yourself running a sensor on a faulty setup command simply because the previous setup command was fine and not cleared prior.
+
+All in all, it is highly recommended to read the BMP280 datasheet provided, for instance, here:
 
 https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/downloads
