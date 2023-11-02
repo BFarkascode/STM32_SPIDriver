@@ -69,7 +69,7 @@ I am not going to explain the messaging and what needs to be written to the BMP2
 - reading out is register address with MSB being 1
 - writing to is register address with MSB being 0
 - the F4 register is the control register, writing 0x27 will allow a standard sensor function
-- the measured raw values are stored in registers Fa, Fb and FC
+- the measured raw values are stored in registers 0xFA, 0xFB and 0xFC
 - raw values are ADC values that need to be reconstructed and managed to turn them into temperature values
 - necessary constants to calculate the temperature are stored in registers from 0x88 to 0x8D
 
