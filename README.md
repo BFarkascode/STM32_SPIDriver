@@ -35,6 +35,10 @@ SCK is the communication master clock, driven by the master only.
 
 CS/SS is what selects the device for activity. The benefit of it is that multiple devices can be connected to the same bus, yet they won’t start communicating on the bus as long as this pin is not activated properly. I am emphasizing “used properly” since the CS/SS pins are, almost always, active LOW pins…meaning that they must be pulled HIGH by an external pullup resistor if they don’t have internal pullups added to them by design. We then “active” the pin by pulling it LOW.
 
+## Previous relevant projects
+The following projects should be checked:
+- STM32_ClockDriver (the PWM part not included)
+
 ## To read
 The following sections are necessary for SPI:
 - 31.3 SPI functional description (except 31.3.11 which discusses DMA): general description of how SPI works and how to set it up
