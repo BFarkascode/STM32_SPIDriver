@@ -67,7 +67,7 @@ The SPI pins here are PA5, PA6 and PA7 with PB6 as the external CS/SS. These are
 
 We will use our mcu to communicate with a BMP280 temperature sensor using SPI. This sensor is cheap and very common in electronics design due to its relatively high sensitivity and robustness.
 
-Be aware that the mcu clocks at 32 MHz, while the sensor will clock at lower speed than that (probably 10 MHz or something). This means that we need to "allow" a sensor to react to any command, we can't send the next command immediatelly after the other one, using 32 MHz. I have found a delay of 100 us as a good rough number to bridge over most timings.
+Be aware that the mcu clocks at 32 MHz, while the sensor will clock at lower speed than that (probably 10 MHz or something). This means that we need to "allow" a sensor to react to any command, we can't send the next command immediatelly after the other one, using 32 MHz. I have found a delay of 100 us as a good rough number to bridge over most timings using the BMP280.
 
 I am not going to explain the messaging and what needs to be written to the BMP280 since that is not the aim of this guide. Just to give some guidelines:
 - reading out is register address with MSB being 1
