@@ -1,16 +1,10 @@
 /*
  *  Created on: Nov 2, 2023
- *  Project: STM32_SPI_Driver
- *  File: SPIDriver_STM32L0x3.h
  *  Author: BalazsFarkas
+ *  Project: STM32_SPIDriver
  *  Processor: STM32L053R8
- *  Compiler: ARM-GCC (STM32 IDE)
- *  Program version: 1.0
- *  Program description: N/A
- *  Hardware description/pin distribution: N/A
- *  Modified from: N/A
- *  Change history: N/A
- *
+ *  HEader version: 1.0
+ *  File: SPIDriver_STM32L0x3.h
  */
 
 #ifndef INC_SPIDRIVER_CUSTOM_H_
