@@ -1,10 +1,8 @@
 /*
- *
  *  Created on: Oct 30, 2023
  *  Author: BalazsFarkas
  *  Project: STM32_SPIDriver
  *  Processor: STM32L053R8
- *  Compiler: ARM-GCC (STM32 IDE)
  *  Program version: 1.0
  *  File: ClockDriver_STM32L0x3.c
  *  Change history:
