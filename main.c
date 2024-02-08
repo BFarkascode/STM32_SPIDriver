@@ -1,5 +1,14 @@
 /* USER CODE BEGIN Header */
 /**
+ *  Author: BalazsFarkas
+ *  Project: STM32_SPIDriver
+ *  Processor: STM32L053R8
+ *  Compiler: ARM-GCC (STM32 IDE)
+ *  Program version: 1.0
+ *  File: main.c
+ *  Hardware description/pin distribution: SPI pins on PA5, PA6, PA7, CS pin selected in main.c
+ *  Modified from: N/A
+ *  Change history: N/A
   ******************************************************************************
   * @file           : main.c
   * @brief          : Main program body
