@@ -66,8 +66,11 @@ void SPI1MasterInit (GPIO_TypeDef* gpio_port_SPI, uint8_t gpio_pin_number_SPI) {
 	RCC->IOPENR |= (1<<2);													//PORTC clocking allowed
 																			//Note: we allow all ports, just in case
 	GPIOA->MODER &= ~(1<<10);												//PA5 alternate - SPI1 SCK
+	GPIOA->MODER |= (1<<11);
 	GPIOA->MODER &= ~(1<<14);												//PA7 alternate - SPI1 MOSI
+	GPIOA->MODER |= (1<<15);
 	GPIOA->MODER &= ~(1<<12);												//PA6 alternate - SPI1 MISO
+	GPIOA->MODER |= (1<<13);
 																			//we use push-pull
 	GPIOA->OSPEEDR |= (3<<10);												//PA5 very high speed
 	GPIOA->OSPEEDR |= (3<<14);												//PA7 very high speed
